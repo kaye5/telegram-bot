@@ -4,7 +4,13 @@ const TeleReq = new Telegram(process.env.TOKEN)
 const moment = require('moment-timezone')
 moment.tz.setDefault('Asia/Jakarta')
 const axios = require('axios')
-const myID = '283396282'
+
+var userDB;
+const db = require('./db')
+Promise.resolve(db.getDB('Telegram')).then((fullfill)=>{
+    userDB = fullfill.collection("users")
+    reqDB = fullfill.collection("requests")
+})
 let curTime = moment().add(3,'s').format('s')
 /**
  * @description CRON SCHEDULE
@@ -41,34 +47,48 @@ async function getNews(){
         text : `${article.title}\n${article.url}`
     }
 }
-cron.schedule('0 0 7,2 * * *', async () => {
-    TeleReq.sendMessage(myID,await getQuote())
+cron.schedule('0 0 7 * * *', async () => {
+    let chats = await userDB.find({}) || []
+    let quote = await getQuote();
     let img = await getImage()
-    TeleReq.sendPhoto(myID,{
-        img : img.urls.regular,
-        desc : img.description
+    chats.forEach(chat => {
+        TeleReq.sendMessage(chat._id,quote)        
+        TeleReq.sendPhoto(chat._id,{
+            img : img.urls.regular,
+            desc : img.description
+        })
     })
 }, CronOption)
 cron.schedule('0 0 8,13,17,21 * * *',async () =>{
-    TeleReq.sendMessage(myID,await getWeather());
+    let chats = await userDB.find({}) || []
+    let weather = await getWeather()
+    chats.forEach(chat => {
+        TeleReq.sendMessage(chat._id,weather);
+    })
 },CronOption)
 
-cron.schedule('0 0 9,2 * * *',async () =>{
+cron.schedule('0 0 9 * * *',async () =>{
+    let chats = await userDB.find({}) || []
     let news = await getNews()
-    TeleReq.sendMessage(myID,news.text);
+    chats.forEach(chat => {
+        TeleReq.sendMessage(chat._id,news.text);    
+    })    
 },CronOption)
 
 cron.schedule('0 0 12 * * *',async () =>{
-    TeleReq.sendMessage(myID,`Good afternoon everyone, it's ${moment().format('h:mm a')}.`);
+    let chats = await userDB.find({}) || []
+    chats.forEach(chat => {
+        TeleReq.sendMessage(chat._id,`Good afternoon everyone, it's ${moment().format('h:mm a')}.`);
+    })    
 },CronOption)
+
+cron.schedule('0 0 23 * * *',async ()=>{
+    TeleReq.getUpdates();
+})
 
 /**
  * @description Testing CRON
  */
-// cron.schedule(`${curTime} * * * * *`, async () => {
-    // let img = await getImage()
-    // TeleReq.sendPhoto(myID,{
-    //     img : img.urls.regular,
-    //     desc : img.description
-    // })
-// })
+cron.schedule(`${curTime} * * * * *`, async () => {
+
+})

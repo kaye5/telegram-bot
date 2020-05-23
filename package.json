@@ -1,7 +1,9 @@
 {
   "dependencies": {
     "axios": "^0.19.2",
+    "cheerio": "^1.0.0-rc.3",
     "dotenv": "^8.2.0",
+    "jsdom": "^16.2.2",
     "moment-timezone": "^0.5.29",
     "mongodb": "^3.5.7",
     "node-cron": "^2.0.3"

@@ -2,6 +2,7 @@ const cron = require('node-cron');
 const Telegram = require('./Telegram');
 const TeleReq = new Telegram(process.env.TOKEN)
 const moment = require('moment-timezone')
+const Services = require('./services')
 moment.tz.setDefault('Asia/Jakarta')
 const axios = require('axios')
 
@@ -67,13 +68,24 @@ cron.schedule('0 0 8,13,17,21 * * *',async () =>{
     })
 },CronOption)
 
-cron.schedule('0 0 9 * * *',async () =>{
+cron.schedule('0 0 9,14 * * *',async () =>{
     let chats = await userDB.find({}) || []
     let news = await getNews()
     chats.forEach(chat => {
         TeleReq.sendMessage(chat._id,news.text);    
     })    
 },CronOption)
+
+cron.schedule('0 30 9 * * *',async ()=>{
+    let chats = await userDB.find({}) || []
+    let link = await Services.webScrapGetImg();
+    chats.forEach(chat => {
+        TeleReq.sendPhoto(chat._id,{
+            img : link,
+            caption : ''
+        });
+    })
+})
 
 cron.schedule('0 0 12 * * *',async () =>{
     let chats = await userDB.find({}) || []

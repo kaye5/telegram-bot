@@ -27,7 +27,23 @@ class TelegramAPI {
         }
         return this.request.post('/sendPhoto', option)
     }
-
+    async webhook(message){
+        let command = message.text
+        let name = message.from.first_name +' '+message.from.last_name
+        let key = message.from.id.toString()
+        if(command == '/start'){
+            this.sendMessage(key,"Thank you from now on you'll be recieving text from me.")
+            userDB.insertOne({
+                _id: key,
+                name
+            })
+        } else if(command == '/stop'){
+            this.sendMessage(key,"You won't be recieving any message from me anymore.")
+            userDB.deleteOne({
+                _id: key
+            })
+        }
+    }
     async getUpdates() {
         let res = await this.request.get('/getUpdates')
         let results = res.data.result

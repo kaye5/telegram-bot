@@ -94,9 +94,9 @@ cron.schedule('0 0 12 * * *',async () =>{
     })    
 },CronOption)
 
-cron.schedule('0 0 23 * * *',async ()=>{
-    TeleReq.getUpdates();
-})
+// cron.schedule('0 0 23 * * *',async ()=>{
+//     TeleReq.getUpdates();
+// })
 
 /**
  * @description Testing CRON

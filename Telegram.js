@@ -42,6 +42,8 @@ class TelegramAPI {
             userDB.deleteOne({
                 _id: key
             })
+        } else {
+            this.sendMessage(key,"Yuhuuu thank you for chating with me :)")
         }
     }
     async getUpdates() {

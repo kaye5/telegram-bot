@@ -7,6 +7,7 @@ app.use(express.json());
 const Telegram = require('./Telegram')
 
 app.post('/webhook',(req,res)=>{
+    console.log('webhook req '+new Date())
     const tele = new Telegram(process.env.TOKEN)
     tele.webhook(req.body.message)
     res.sendStatus(200)

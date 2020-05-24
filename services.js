@@ -13,7 +13,6 @@ module.exports = {
             item[idx] = res.attribs['src'];
         })
         
-        // return `https://wallpapercave.com/${item[String(new Date().getDate())]}`
-        return `https://wallpapercave.com/${item['54']}`;
+        return `https://wallpapercave.com/${item[String(new Date().getDate())]}`
     }
 }

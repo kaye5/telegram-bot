@@ -68,7 +68,7 @@ cron.schedule('0 0 8,13,17,21 * * *',async () =>{
     })
 },CronOption)
 
-cron.schedule('0 0 9,14 * * *',async () =>{
+cron.schedule('0 0 9,14,22 * * *',async () =>{
     let chats = await userDB.find({}) || []
     let news = await getNews()
     chats.forEach(chat => {

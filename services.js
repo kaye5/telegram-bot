@@ -22,11 +22,15 @@ module.exports = {
     async getTwitterTrending(woeid){
         let res = await axios.get(`https://api.twitter.com/1.1/trends/place.json?id=${woeid}`,{headers : {authorization : `Bearer ${process.env.TWITTER_AUTH}`}})
         var message = 'Current twitter trending hashtag :\n';
+        var c = 0; 
         res.data[0].trends.forEach(trend => {
-            if(trend.name[0] == '#')
+            if(c>10)
+                return -1;
+            else if(trend.name[0] == '#')
                 message += `${trend.name.slice(1)} : ${trend.url}\n`;
             else 
                 message += `${trend.name} : ${trend.url}\n`;
+            c++;
         });
         return message;
     }

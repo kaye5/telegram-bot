@@ -118,14 +118,14 @@ cron.schedule('0 0 10 * * *',async ()=>{
     chats.forEach(chat => {
         TeleReq.sendMessage(chat._id,message);
     })
-})
-cron.schedule('0 0 20 * * *',async ()=>{
+},CronOption)
+cron.schedule('0 10 20 * * *',async ()=>{
     let chats = await userDB.find({}) || []
     let message = await Services.getTwitterTrending('1');
     chats.forEach(chat => {
         TeleReq.sendMessage(chat._id,message);
     })
-})
+},CronOption)
 
 /**
  * @description Afternoon greeting
